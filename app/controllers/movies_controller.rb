@@ -10,11 +10,15 @@ class MoviesController < ApplicationController
     @sort_by = params[:sort_by] || session[:sort_by]
      #@movies = Movie.all
     @all_ratings = Movie.list_all_values_of_column('rating')
-    @ratings = params[:ratings] || session[:ratings] || @all_ratings
+    @ratings = params[:ratings] || session[:ratings]
     @filtered_ratings = []
     
-
-    @filtered_ratings = @ratings.keys
+    if @ratings.nil?
+      @filtered_ratings = @all_ratings
+    else  
+      @filtered_ratings = @ratings.keys
+    end
+    
     @movies = Movie.with_ratings(@filtered_ratings)
     
     if params[:sort_by] != session[:sort_by]
